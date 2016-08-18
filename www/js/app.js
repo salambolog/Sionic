@@ -1,53 +1,62 @@
 var app = angular.module('scotch-todo', ['ionic', 'LocalStorageModule']);
 
-app.config(function (localStorageServiceProvider){
-  localStorageServiceProvider
-    .setPrefix('scotch-todo');
+app.config(function(localStorageServiceProvider) {
+    localStorageServiceProvider
+        .setPrefix('scotch-todo');
 });
 
-app.controller('main', function($scope, $ionicModal, localStorageService) { //store the entities name in a variable var taskData = 'task';
+app.controller('main', function($scope, $ionicModal, localStorageService) { //store the entities name in a variable
 
-     //initialize the tasks scope with empty array
-     $scope.tasks = [];
+    var taskData = 'task';
 
-     //initialize the task scope with empty object
-     $scope.task = {};
+    //initialize the tasks scope with empty array
+    $scope.tasks = [];
 
-     //configure the ionic modal before use
-     $ionicModal.fromTemplateUrl('new-task-modal.html', {
-         scope: $scope,
-         animation: 'slide-in-up'
-     }).then(function(modal) {
-         $scope.newTaskModal = modal;
-     });
+    //initialize the task scope with empty object
+    $scope.task = {};
 
-     $scope.getTasks = function() {
-         //fetches task from local storage
-         if (localStorageService.get(taskData)) {
-          $scope.tasks =localStorageService.get(taskData);
-         } else {
-          $scope.tasks = [];
-         }
-     }
-     $scope.createTask = function() {
-         //creates a new task
-         $scope.tasks.push($scope.task); //<----here
-         localStorageService.set(taskData, $scope.tasks);
-         $scope.task = {};
-         // close new task modal
-         $scope.newTaskModal.hide();
+    $scope.openTaskModal = function() {
+        $scope.newTaskModal.show();
+    };
 
-     }
-     $scope.removeTask = function(index) {
-         //removes a task
-         $scope.tasks.splice(index, 1);
-         localStorageService.set(taskData, $scope.tasks);
-     }
-     $scope.completeTask = function(index) {
-         //updates a task as completed
-         if (index != -1) {
-          $scope.tasks[index].completed = true;
-         }
-         localStorageService.set(taskData, $scope.tasks);
-     }
- });
+    $scope.closeTaskModal = function() {
+        $scope.newTaskModal.hide();
+    };
+
+    //configure the ionic modal before use
+    $ionicModal.fromTemplateUrl('new-task-modal.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function(modal) {
+        $scope.newTaskModal = modal;
+    });
+
+    $scope.getTasks = function() {
+        //fetches task from local storage
+        if (localStorageService.get(taskData)) {
+            $scope.tasks = localStorageService.get(taskData);
+        } else {
+            $scope.tasks = [];
+        }
+    }
+    $scope.createTask = function() {
+        //creates a new task
+        $scope.tasks.push($scope.task);
+        localStorageService.set(taskData, $scope.tasks);
+        $scope.task = {};
+        //close new task modal
+        $scope.newTaskModal.hide();
+    }
+    $scope.removeTask = function(index) {
+        //removes a task
+        $scope.tasks.splice(index, 1);
+        localStorageService.set(taskData, $scope.tasks);
+    }
+    $scope.completeTask = function(index) {
+        //updates a task as completed
+        if (index !== -1) {
+            $scope.tasks[index].completed = true;
+        }
+        localStorageService.set(taskData, $scope.tasks);
+    }
+});

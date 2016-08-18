@@ -3063,7 +3063,8 @@ html {
  */
 body {
   margin: 0;
-  line-height: 1; }
+  line-height: 1;
+   }
 
 /**
  * Remove default outlines.
